@@ -1,0 +1,101 @@
+@import url(http://fonts.googleapis.com/css?family=Chivo);
+
+
+html, body{
+	font-family: 'Chivo', sans-serif;
+	margin: 0px;
+	padding: 0px;
+}
+
+h2 {
+    color: #4d4d4d;
+}
+p {
+    color: #FF2C0C;
+	padding: 0px;
+	margin: 0px;
+}
+a.home{
+	text-decoration: none;
+}
+.name {
+    font-size: 1.8em;
+    color: #4f4f4f;
+    margin: 10px;
+}
+#searchinput {
+    padding: 5px;
+    font-size: 1.4em;
+    margin: 10px;
+}
+#mainbar {
+    width: 100%;
+    padding: 0px 0px 10px 0px;
+}
+#mainbar img {
+    vertical-align: middle;
+}
+
+#container {
+	width: 90%;
+	margin: 20px auto 0px auto;
+}
+#show-video{
+	display: none;
+}
+.video-container {
+    position: relative;
+    padding-bottom: 56.25%;
+    padding-top: 10px;
+	height: 0;
+	overflow: hidden;
+}
+ 
+.video-container iframe,
+.video-container object,
+.video-container embed {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.individual-video img {
+    width: 300px;
+}
+.individual-video h2 {
+    font-size: 1em;
+}
+
+.individual-video {
+    background: #f2f2f2;
+    width: 315px; 
+    float: left; 
+    margin: 5px;
+    padding: 5px;
+    height: 350px; 
+	border:2px solid #333;
+	overflow:auto;
+}
+
+.searchbutton {
+	cursor: pointer;
+    background: #FF2A0E;
+    border: 2px solid #4f4f4f;
+    border-radius: 5px 5px 5px 5px;
+    color: #fff;
+    font-size: 1.2em;
+/*    height: 30px; */
+    margin: 5px 5px 5px 5px;
+    padding: 5px;
+    text-align: center;
+    text-decoration: none;
+    width: 110px;
+    display: inline-block;
+}
+.searchbutton:hover{
+    border: 2px solid #000;
+    transition: all 0.25s;
+	-webkit-transition: all 0.25s;
+}
