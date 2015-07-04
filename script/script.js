@@ -57,7 +57,8 @@ var searchTool = {												// main search function
 		$('#videos-grid').empty();								//empty the previous search in case there was one			
 		$('#show-video').slideUp();								//hide show video div in case a video have been displayed		
 	
-		sendSearchToJson('https://gdata.youtube.com/feeds/api/videos?q='+ inputData +'+TED&alt=json' , inputData);		//I generate the jSon feed for the api
+		// sendSearchToJson('https://gdata.youtube.com/feeds/api/videos?q='+ inputData +'+TED&alt=json' , inputData);		//I generate the jSon feed for the api
+		sendSearchToJson('https://www.googleapis.com/youtube/v3/search?part=snippet&q='+ inputData +'+TED&order=viewCount&key={AIzaSyCXPLS2sjm8jzy2ZHTlJ9oLahkqr0ZY3r4}');
 
 		
 		timeout = setTimeout(function() {						//timeout function to get some time to get the results
