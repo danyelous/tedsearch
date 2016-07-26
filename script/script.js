@@ -1,8 +1,12 @@
 // TedTalks Search Tool project by Ponto.
 
 var timeout;													// timer control variable, for message on resutls status
+var timerIsOn = true;											// variable to check the timer for the delay on searching items
 
 var showedFlag = false;											//flag to avoid hiding and showing the results status
+
+			
+var inputData;													// store input search string		
 
 																
 var searchTool = {												// main search function	
@@ -17,9 +21,9 @@ var searchTool = {												// main search function
 																// to capture the enter key when submitting a search
 	$(document).keyup(function (e) {
 		if ( $('#searchinput').focus() && (e.which === 13) ) {
-		var inputData = $('#searchinput').val().trim(); 		//to avoid empty searchs
+		inputData = $('#searchinput').val().trim(); 		//to avoid empty searchs
 			if( inputEntryIsValid(inputData) ){			 		//evaluate if the entry is valid
-				generateNewSearch(inputData);					//generate the search and display the results
+				startNewSearch(inputData);					//generate the search and display the results
 
 			}
 		}
@@ -27,9 +31,9 @@ var searchTool = {												// main search function
 	 
 																// to capture the search button when submitting a search
 	$('.searchbutton').click(function() {
-		var inputData = $('#searchinput').val().trim(); 		//to avoid empty searchs
+		inputData = $('#searchinput').val().trim(); 		//to avoid empty searchs
 			if( inputEntryIsValid(inputData) ){ 				//evaluate if the entry is valid
-				generateNewSearch(inputData);					//generate the search and display the results
+				startNewSearch(inputData);					//generate the search and display the results
 
 			}
 	});
@@ -47,23 +51,41 @@ var searchTool = {												// main search function
 // ******************** Internal functions ********************
 
 																// Search generator function
-	function generateNewSearch(inputData) {
+	function startNewSearch(inputData) {
 		
 		showedFlag = false;										//flag reset on each new search
 		
-		$('.results-message').fadeOut('fast');					//hide message on each new search
+		timerIsOn = true;										// set timer true to stop the searching loop
 		
+		$('#videoframe').attr("src", ""); 						//set iframe to cancel current video, this is to avoid to keep the video playing wheil searching something new
+
+		$('.results-message').fadeOut('fast', function(){							//hide message on each new search
+			
+			$('.results-message').html('Searching').hide().fadeIn('fast');			// Show a searching message while waiting the results
+			
+			searchingMessageLoop();													// generate a loop to dispaly a searching text like loading
+			
+		});
 		
 		$('#videos-grid').empty();								//empty the previous search in case there was one			
 		$('#show-video').slideUp();								//hide show video div in case a video have been displayed		
 	
-		// sendSearchToJson('https://gdata.youtube.com/feeds/api/videos?q='+ inputData +'+TED&alt=json' , inputData);		//I generate the jSon feed for the api
-		sendSearchToJson('https://www.googleapis.com/youtube/v3/search?part=snippet&q='+ inputData +'+TED&order=viewCount&key={AIzaSyCXPLS2sjm8jzy2ZHTlJ9oLahkqr0ZY3r4}');
+		//request = 'https://content.googleapis.com/youtube/v3/search?part=snippet&q='+ inputData +'+TED&type=video&key=AIzaSyCXPLS2sjm8jzy2ZHTlJ9oLahkqr0ZY3r4';
 
+		generateNewSearch(inputData);
 		
+
 		timeout = setTimeout(function() {						//timeout function to get some time to get the results
-					$('.results-message').html('It seems that there are no results for '+inputData).hide().fadeIn('fast'); //if there are no results in the time set, a message is showed
-		}, 1000);
+					
+					if(timerIsOn){								//check if the searching loop is stopped
+						$('.results-message').fadeOut('fast', function(){				//To hide the previous message, and then show the no results one
+							$('.results-message').html('It seems that there are no results for "'+inputData+'"').hide().fadeIn('fast'); //if there are no results in the time set, a message is showed
+						});
+					}
+					timerIsOn = false;							// reset timer check
+		}, 6000);												//time delay setting
+		
+
 		
 
 		
@@ -72,31 +94,30 @@ var searchTool = {												// main search function
 	function inputEntryIsValid(inputValue){ 					// evaluates the input entry
 		return (inputValue !== '');
 	}
-																//Json YouTube API search request
-	function sendSearchToJson(feed, inputData) {
-			$.getJSON(feed, function(data) {
-
-				$.each(data['feed']['entry'], function(key, entry) {			//iterate over each video retrieved
+	
+	function iterateOverResponse(response) {
+    
+			$.each(response.items, function(key, item) {						//iterate over each video retrieved
 				
-					if( entry.author[0].name.$t.indexOf("TED") >= 0  ){			// since the API can search for several authors, a filter is made on the authors video results
-					
+					if( item.snippet.channelTitle.indexOf("TED") >= 0  ){			// since the API can search for several authors, a filter is made on the authors video results
 					
 						clearTimeout(timeout); 									//Since a results is found, Clear the timer to avoid show the no results message
+						timerIsOn = false;
 
 						if(!showedFlag){										//Check flag status, if the message was already showed, avoid hidding and showing it again
 						
 							showedFlag = true;									// once first results are showed, flasg status change
 							
 							$('.results-message').fadeOut('fast', function(){		//Maybe the message is already showed, if so is hidden	
-								$('.results-message').html('Results for '+inputData).hide().fadeIn('fast');		//show message for search performed
+								$('.results-message').html('Results for "'+inputData+'"').hide().fadeIn('fast');		//show message for search performed
 							});
 						}
 
 					   
 						var $indVideo = $('<div></div>').addClass('individual-video video'+key ); 			//Create individual divitions for each video
-						$indVideo.append('<h2>' + entry.title.$t + '</h2>');								//Add the title
-						$indVideo.append('<img src="' + entry.media$group.media$thumbnail[0].url + '">');	//Add the thumbnail image	
-						$indVideo.append('<p>by ' + entry.author[0].name.$t + '</p>');						//Add the author	
+						$indVideo.append('<h2>' + item.snippet.title + '</h2>');								//Add the title
+						$indVideo.append('<img src="' + item.snippet.thumbnails.medium.url + '">');	//Add the thumbnail image	
+						$indVideo.append('<p>by ' + item.snippet.channelTitle + '</p>');						//Add the author	
 
 						      setTimeout(function () {														//delay to generate the effect to be added one by one
 									$('#videos-grid').append($indVideo);									//Add the video
@@ -105,7 +126,7 @@ var searchTool = {												// main search function
 
 						
 						$indVideo.click(function() {							//to show video on click				
-						 		showVideo(entry.id.$t, entry.title.$t);			//function to display video information	
+						 		showVideo(item.id.videoId, item.snippet.title);			//function to display video information	
 						});
 
 					}
@@ -114,10 +135,42 @@ var searchTool = {												// main search function
 				});
 
 
-			});
 
 	}
 	
+	
+	
+	function searchingMessageLoop() {								// function to create a searching loading loop
+
+		$('.results-message').html('Searching');					//first insertion
+	
+		setTimeout(function() {										// first delay
+			if(timerIsOn){											// the if on each insertion if to avoid inserting an HTML value after the delay if results or no results message is showed
+				$('.results-message').html('Searching .');			//second insertion
+			}
+		}, 500);
+
+		setTimeout(function() {										// second delay	
+			if(timerIsOn){
+				$('.results-message').html('Searching . .');		//third insertion
+			}
+		}, 1000);
+		
+		setTimeout(function() {										// third delay
+			if(timerIsOn){
+				$('.results-message').html('Searching . . .');		//fourth insertion
+			}
+		}, 1500);
+		
+		setTimeout(function() {										// fourth delay
+			if(timerIsOn){
+				searchingMessageLoop();								//recursive call if timer is still on
+			}
+		}, 2000);
+		
+		
+		
+	}
 
 // ******************** End Internal functions ********************
 
@@ -127,9 +180,9 @@ var searchTool = {												// main search function
 
 // ******************** HTML insertions functions ********************
 
-	function showVideo(id, title) {									//function to display video information	
+	function showVideo(videoID, title) {									//function to display video information	
 		
-		var videoID = id.substring(42,id.length);					//to get the video ID from the video API URL (that is different for the one needed on the iframe)
+		//var videoID = id.substring(42,id.length);					//to get the video ID from the video API URL (that is different for the one needed on the iframe)
 
 		$('#show-video').slideDown();								//slideDown effect to the video div display	
 
@@ -150,6 +203,10 @@ var searchTool = {												// main search function
 
 
 
+
+
+
+
 $(document).ready(function() {
 
 	searchTool.onReady();											//go to main function after page is ready
@@ -157,5 +214,65 @@ $(document).ready(function() {
 
 });
 
+
+
+
+
+
+
+
+
+
+
+// Your use of the YouTube API must comply with the Terms of Service:
+// https://developers.google.com/youtube/terms
+
+// Helper function to display JavaScript value on HTML page.
+function showResponse(response) {
+
+// $('#response').empty(); //clears the div before a new search result is inserted
+
+    var responseString = JSON.stringify(response, '', 2);
+    document.getElementById('response').innerHTML += responseString;
+}
+
+
+// Called automatically when JavaScript client library is loaded.
+function onClientLoad() {
+    gapi.client.load('youtube', 'v3', onYouTubeApiLoad);
+}
+
+// Called automatically when YouTube API interface is loaded (see line 9).
+function onYouTubeApiLoad() {
+    // This API key is intended for use only in this lesson.
+    // See http://goo.gl/PdPA1 to get a key for your own applications.
+    gapi.client.setApiKey('AIzaSyCXPLS2sjm8jzy2ZHTlJ9oLahkqr0ZY3r4');
+
+   //generateNewSearch('travel');
+}
+
+function generateNewSearch(input) {
+    // Use the JavaScript client library to create a search.list() API call.
+    var request = gapi.client.youtube.search.list({
+
+        part: 'snippet',
+        q: input + ' TED',
+        type: 'video',
+        maxResults: '50',
+        
+    });
+    
+    // Send the request to the API server,
+    // and invoke onSearchRepsonse() with the response.
+    request.execute(onSearchResponse);
+
+}
+
+// Called automatically with the response of the YouTube API request.
+function onSearchResponse(response) {
+    //showResponse(response); 												//for testing
+
+    iterateOverResponse(response);
+}
 
 
