@@ -5,6 +5,7 @@ html, body{
 	font-family: 'Chivo', sans-serif;
 	margin: 0px;
 	padding: 0px;
+height:100%;
 }
 
 h2 {
@@ -22,6 +23,10 @@ a.home{
     font-size: 1.8em;
     color: #4f4f4f;
     margin: 10px;
+	display: inline-block;
+}
+.results-message{
+	color: #333;
 }
 #searchinput {
     padding: 5px;
@@ -30,7 +35,7 @@ a.home{
 }
 #mainbar {
     width: 100%;
-    padding: 0px 0px 10px 0px;
+    padding: 10px 0px 10px 0px;
 }
 #mainbar img {
     vertical-align: middle;
@@ -38,8 +43,24 @@ a.home{
 
 #container {
 	width: 90%;
-	margin: 20px auto 0px auto;
+	margin: 0px auto 0px auto;
+min-height: 100%;
+height: auto;
 }
+
+#footer {
+width: 100%;
+border-top: 2px solid #fff;
+height:38px;
+clear: both;
+position: relative;
+margin-top: -65px;
+}
+
+#footerspace{
+    padding: 5px 10px 0px 0px;
+}
+
 #show-video{
 	display: none;
 }
@@ -77,6 +98,20 @@ a.home{
     height: 350px; 
 	border:2px solid #333;
 	overflow:auto;
+-webkit-transition: all 0.5s ease;
+-moz-transition: all 0.5s ease;
+-ms-transition: all 0.5s ease;
+-o-transition: all 0.5s ease;
+transition: all 0.5s ease;
+}
+.individual-video:hover {
+	cursor: pointer;
+	border:2px solid #FF2C0C;
+-webkit-transition: all 0.5s ease;
+-moz-transition: all 0.5s ease;
+-ms-transition: all 0.5s ease;
+-o-transition: all 0.5s ease;
+transition: all 0.5s ease;
 }
 
 .searchbutton {
@@ -86,16 +121,34 @@ a.home{
     border-radius: 5px 5px 5px 5px;
     color: #fff;
     font-size: 1.2em;
-/*    height: 30px; */
     margin: 5px 5px 5px 5px;
     padding: 5px;
     text-align: center;
     text-decoration: none;
     width: 110px;
     display: inline-block;
+-webkit-transition: all 0.5s ease;
+-moz-transition: all 0.5s ease;
+-ms-transition: all 0.5s ease;
+-o-transition: all 0.5s ease;
+transition: all 0.5s ease;
 }
 .searchbutton:hover{
-    border: 2px solid #000;
-    transition: all 0.25s;
-	-webkit-transition: all 0.25s;
+	border:2px solid #FF2C0C;
+-webkit-transition: all 0.5s ease;
+-moz-transition: all 0.5s ease;
+-ms-transition: all 0.5s ease;
+-o-transition: all 0.5s ease;
+transition: all 0.5s ease;
+}
+
+.footer {
+    font-size: 1em;
+    float: right;
+    padding: 6px 0px 0px 0px;
+	color: #4d4d4d;
+}
+.youtube-logo {
+    vertical-align: middle;
+    float: right;
 }
