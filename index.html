@@ -4,13 +4,16 @@
 
 <link href='http://fonts.googleapis.com/css?family=Chivo' rel='stylesheet' type='text/css'>
 
-<title>TedTalks Search Tool: by Ponto</title>
+<title>Ted Talks Search Tool: by Ponto</title>
 
 <link rel="stylesheet" href="style/style.css" type="text/css" />
 
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
 
-<script type="text/javascript" src="script/script.js"></script>
+<script type="text/javascript" src="script/script.js?v=0"></script>
+
+<script src="https://apis.google.com/js/client.js?onload=onClientLoad" type="text/javascript"></script>
+
 
 </head>
 
@@ -20,14 +23,14 @@
 
 	<div id="mainbar">
 	
-		<a class="home" href="index.html"> <img alt="YouTube logo" src="images/youtube-logo.png" class="youtube-logo" /> <span class="name"> API &nbsp;&nbsp;&nbsp;</span> <img alt="TEDxTalks logo" src="images/tedx_logo.jpg" class="ted-logo" /> <span class="name"> Search tool. </span> </a>
+		<a class="home" href="index.html"> <img alt="TEDxTalks logo" src="images/tedx_logo.jpg" class="ted-logo" /> <span class="name"> Talks search tool. </span> </a>
 		
-		<input id="searchinput" name="searchinput" type="text" maxlength="45" size="50"> <a class="searchbutton"> SEARCH </a>
+		<input id="searchinput" name="searchinput" type="text" maxlength="" size="30"> <a class="searchbutton"> SEARCH </a>
 
 	</div> <!-- end mainbar -->
 	
 	<div id="results">
-		<h3 class="results"> <span class="results-message"> </span><!-- Talks found:  / Sorry, no talks founds. Here are some recomended talks:  --> &nbsp; </h3>
+		<h3 class="results"> <span class="results-message"> </span> &nbsp; </h3>
 	</div> <!-- end results -->
 	
 	<div id="show-video">
@@ -43,7 +46,14 @@
 
 </div> <!-- end container -->
 
+<div id="footer">
+	 <div id="footerspace"><p class="footer"> API </p> <img alt="YouTube logo" src="images/youtube-logo.png" class="youtube-logo" /> <p class="footer"> Powered by </p></div> 
+</div> <!-- end footer -->
 
-
+<!-- FOR TESTING
+<br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
+<pre id="response"></pre>
+<br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
+-->
 </body>
 </html>
