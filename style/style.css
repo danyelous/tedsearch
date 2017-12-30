@@ -30,10 +30,14 @@ a.home{
 	color: #e3e3e3;
 }
 #searchinput {
-    padding: 5px;
+    padding: 5px 5px 5px 5px;
     font-size: 1.4em;
-    margin: 10px;
-vertical-align: top;
+    margin: 7px;
+    vertical-align: top;
+    background: #333;
+    color: #e3e3e3;
+    border: #4f4f4f;
+    border-radius: 5px;
 }
 #mainbar {
     width: 100%;
@@ -126,7 +130,7 @@ border-radius: 5px;
     border-radius: 5px 5px 5px 5px;
     color: #fff;
     font-size: 1.2em;
-    margin: 12px 5px 5px 5px;
+    margin: 8px 5px 5px 5px;
     padding: 5px;
     text-align: center;
     text-decoration: none;
