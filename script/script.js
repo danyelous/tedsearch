@@ -192,7 +192,7 @@ var searchTool = {												// main search function
 		// p = ($('#videoframe').offset());							//obtain video position, not seems to be working
 		// p = ($('#videoframe').position());						//obtain video position, not seems to be working
 		
-		$("html,body").animate({ scrollTop: 200 },'slow');			//scroll to the video div position
+		$("html,body").animate({ scrollTop: 220 },'slow');			//scroll to the video div position
 		
 		$('#searchinput').focus();									// input get the focus in case a new search is performed
 
