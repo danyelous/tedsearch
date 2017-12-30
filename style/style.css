@@ -5,11 +5,12 @@ html, body{
 	font-family: 'Chivo', sans-serif;
 	margin: 0px;
 	padding: 0px;
-height:100%;
+	height:100%;
+	background: #161616;
 }
 
 h2 {
-    color: #4d4d4d;
+    color: #e3e3e3;
 }
 p {
     color: #FF2C0C;
@@ -21,21 +22,22 @@ a.home{
 }
 .name {
     font-size: 1.8em;
-    color: #4f4f4f;
+    color: #e3e3e3;
     margin: 10px;
 	display: inline-block;
 }
 .results-message{
-	color: #333;
+	color: #e3e3e3;
 }
 #searchinput {
     padding: 5px;
     font-size: 1.4em;
     margin: 10px;
+vertical-align: top;
 }
 #mainbar {
     width: 100%;
-    padding: 10px 0px 10px 0px;
+    padding: 0px 0px 5px 0px;
 }
 #mainbar img {
     vertical-align: middle;
@@ -83,19 +85,21 @@ margin-top: -65px;
 }
 
 .individual-video img {
-    width: 300px;
+	width: 300px;
+	margin: 0px auto 20px auto;
+	text-align: center;
 }
 .individual-video h2 {
     font-size: 1em;
 }
 
 .individual-video {
-    background: #f2f2f2;
+    background: #1d1d1d;
     width: 315px; 
     float: left; 
     margin: 5px;
     padding: 5px;
-    height: 350px; 
+    height: 310px; 
 	border:2px solid #333;
 	overflow:auto;
 -webkit-transition: all 0.5s ease;
@@ -112,6 +116,7 @@ transition: all 0.5s ease;
 -ms-transition: all 0.5s ease;
 -o-transition: all 0.5s ease;
 transition: all 0.5s ease;
+border-radius: 5px;
 }
 
 .searchbutton {
@@ -121,12 +126,13 @@ transition: all 0.5s ease;
     border-radius: 5px 5px 5px 5px;
     color: #fff;
     font-size: 1.2em;
-    margin: 5px 5px 5px 5px;
+    margin: 12px 5px 5px 5px;
     padding: 5px;
     text-align: center;
     text-decoration: none;
     width: 110px;
     display: inline-block;
+	vertical-align: top;
 -webkit-transition: all 0.5s ease;
 -moz-transition: all 0.5s ease;
 -ms-transition: all 0.5s ease;
@@ -151,4 +157,10 @@ transition: all 0.5s ease;
 .youtube-logo {
     vertical-align: middle;
     float: right;
+}
+
+#videos-grid .individual-video h2{
+
+	min-height: 60px;
+	
 }
