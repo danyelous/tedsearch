@@ -187,7 +187,7 @@ var searchTool = {												// main search function
 		$('#show-video').slideDown();								//slideDown effect to the video div display	
 
 		$('#show-video h2').html(title);							// Display title
-		$('#videoframe').attr("src", "http://www.youtube.com/embed/"+ videoID +"?rel=0&autoplay=1"); //set iframe properties to display the video
+		$('#videoframe').attr("src", "https://www.youtube.com/embed/"+ videoID +"?rel=0&autoplay=1"); //set iframe properties to display the video
 		
 		// p = ($('#videoframe').offset());							//obtain video position, not seems to be working
 		// p = ($('#videoframe').position());						//obtain video position, not seems to be working
