@@ -246,8 +246,8 @@ function onClientLoad() {
 function onYouTubeApiLoad() {
     // This API key is intended for use only in this lesson.
     // See http://goo.gl/PdPA1 to get a key for your own applications.
-    gapi.client.setApiKey('AIzaSyCXPLS2sjm8jzy2ZHTlJ9oLahkqr0ZY3r4');
-    //gapi.client.setApiKey('AIzaSyBEP1Pi6H-66ApYHVT9Wftd4Xb3YRqDE9w');
+    //gapi.client.setApiKey('AIzaSyCXPLS2sjm8jzy2ZHTlJ9oLahkqr0ZY3r4');
+    gapi.client.setApiKey('AIzaSyBEP1Pi6H-66ApYHVT9Wftd4Xb3YRqDE9w');
 
    //generateNewSearch('travel');
 }
