@@ -1,279 +1,412 @@
-// TedTalks Search Tool project by Ponto.
-
-var timeout;													// timer control variable, for message on resutls status
-var timerIsOn = true;											// variable to check the timer for the delay on searching items
-
-var showedFlag = false;											//flag to avoid hiding and showing the results status
-
-			
-var inputData;													// store input search string		
-
-																
-var searchTool = {												// main search function	
-
-    onReady: function() {
-	
-	$('#searchinput').focus(); 									//search input get the focus on page load
-
-	
-	// ******************** Input functions ********************
-
-																// to capture the enter key when submitting a search
-	$(document).keyup(function (e) {
-		if ( $('#searchinput').focus() && (e.which === 13) ) {
-		inputData = $('#searchinput').val().trim(); 		//to avoid empty searchs
-			if( inputEntryIsValid(inputData) ){			 		//evaluate if the entry is valid
-				startNewSearch(inputData);					//generate the search and display the results
-
-			}
-		}
-	 });
-	 
-																// to capture the search button when submitting a search
-	$('.searchbutton').click(function() {
-		inputData = $('#searchinput').val().trim(); 		//to avoid empty searchs
-			if( inputEntryIsValid(inputData) ){ 				//evaluate if the entry is valid
-				startNewSearch(inputData);					//generate the search and display the results
-
-			}
-	});
-
- 
-	// ******************** End Input functions ********************
-	
-	
-        
-    },
-	
-	};
-
-
-// ******************** Internal functions ********************
-
-																// Search generator function
-	function startNewSearch(inputData) {
-		
-		showedFlag = false;										//flag reset on each new search
-		
-		timerIsOn = true;										// set timer true to stop the searching loop
-		
-		$('#videoframe').attr("src", ""); 						//set iframe to cancel current video, this is to avoid to keep the video playing wheil searching something new
-
-		$('.results-message').fadeOut('fast', function(){							//hide message on each new search
-			
-			$('.results-message').html('Searching').hide().fadeIn('fast');			// Show a searching message while waiting the results
-			
-			searchingMessageLoop();													// generate a loop to dispaly a searching text like loading
-			
-		});
-		
-		$('#videos-grid').empty();								//empty the previous search in case there was one			
-		$('#show-video').slideUp();								//hide show video div in case a video have been displayed		
-	
-		//request = 'https://content.googleapis.com/youtube/v3/search?part=snippet&q='+ inputData +'+TED&type=video&key=AIzaSyCXPLS2sjm8jzy2ZHTlJ9oLahkqr0ZY3r4';
-
-		generateNewSearch(inputData);
-		
-
-		timeout = setTimeout(function() {						//timeout function to get some time to get the results
-					
-					if(timerIsOn){								//check if the searching loop is stopped
-						$('.results-message').fadeOut('fast', function(){				//To hide the previous message, and then show the no results one
-							$('.results-message').html('It seems that there are no results for "'+inputData+'"').hide().fadeIn('fast'); //if there are no results in the time set, a message is showed
-						});
-					}
-					timerIsOn = false;							// reset timer check
-		}, 6000);												//time delay setting
-		
-
-		
-
-		
-	}
-
-	function inputEntryIsValid(inputValue){ 					// evaluates the input entry
-		return (inputValue !== '');
-	}
-	
-	function iterateOverResponse(response) {
-    
-			$.each(response.items, function(key, item) {						//iterate over each video retrieved
-				
-					if( item.snippet.channelTitle.indexOf("TED") >= 0  ){			// since the API can search for several authors, a filter is made on the authors video results
-					
-						clearTimeout(timeout); 									//Since a results is found, Clear the timer to avoid show the no results message
-						timerIsOn = false;
-
-						if(!showedFlag){										//Check flag status, if the message was already showed, avoid hidding and showing it again
-						
-							showedFlag = true;									// once first results are showed, flasg status change
-							
-							$('.results-message').fadeOut('fast', function(){		//Maybe the message is already showed, if so is hidden	
-								$('.results-message').html('Results for "'+inputData+'"').hide().fadeIn('fast');		//show message for search performed
-							});
-						}
-
-					   
-						var $indVideo = $('<div></div>').addClass('individual-video video'+key ); 			//Create individual divitions for each video
-						$indVideo.append('<h2>' + item.snippet.title + '</h2>');								//Add the title
-						$indVideo.append('<img src="' + item.snippet.thumbnails.medium.url + '">');	//Add the thumbnail image	
-						$indVideo.append('<p>by ' + item.snippet.channelTitle + '</p>');						//Add the author	
-
-						      setTimeout(function () {														//delay to generate the effect to be added one by one
-									$('#videos-grid').append($indVideo);									//Add the video
-									$('#videos-grid').children( '.video'+key ).hide().slideDown('fast');	//scroll down effect on video adding
-							  }, key*250);
-
-						
-						$indVideo.click(function() {							//to show video on click				
-						 		showVideo(item.id.videoId, item.snippet.title);			//function to display video information	
-						});
-
-					}
-
-
-				});
-
-
-
-	}
-	
-	
-	
-	function searchingMessageLoop() {								// function to create a searching loading loop
-
-		$('.results-message').html('Searching');					//first insertion
-	
-		setTimeout(function() {										// first delay
-			if(timerIsOn){											// the if on each insertion if to avoid inserting an HTML value after the delay if results or no results message is showed
-				$('.results-message').html('Searching .');			//second insertion
-			}
-		}, 500);
-
-		setTimeout(function() {										// second delay	
-			if(timerIsOn){
-				$('.results-message').html('Searching . .');		//third insertion
-			}
-		}, 1000);
-		
-		setTimeout(function() {										// third delay
-			if(timerIsOn){
-				$('.results-message').html('Searching . . .');		//fourth insertion
-			}
-		}, 1500);
-		
-		setTimeout(function() {										// fourth delay
-			if(timerIsOn){
-				searchingMessageLoop();								//recursive call if timer is still on
-			}
-		}, 2000);
-		
-		
-		
-	}
-
-// ******************** End Internal functions ********************
-
-
-
-
-
-// ******************** HTML insertions functions ********************
-
-	function showVideo(videoID, title) {									//function to display video information	
-		
-		//var videoID = id.substring(42,id.length);					//to get the video ID from the video API URL (that is different for the one needed on the iframe)
-
-		$('#show-video').slideDown();								//slideDown effect to the video div display	
-
-		$('#show-video h2').html(title);							// Display title
-		$('#videoframe').attr("src", "https://www.youtube.com/embed/"+ videoID +"?rel=0&autoplay=1"); //set iframe properties to display the video
-		
-		// p = ($('#videoframe').offset());							//obtain video position, not seems to be working
-		// p = ($('#videoframe').position());						//obtain video position, not seems to be working
-		
-		$("html,body").animate({ scrollTop: 180 },'slow');			//scroll to the video div position
-		
-		$('#searchinput').focus();									// input get the focus in case a new search is performed
-
-	}
-
-// ******************** End HTML insertions functions ********************
-
-
-
-
-
-
-
-
-$(document).ready(function() {
-
-	searchTool.onReady();											//go to main function after page is ready
-	
-
-});
-
-
-
-
-
-
-
-
-
-
-
-// Your use of the YouTube API must comply with the Terms of Service:
-// https://developers.google.com/youtube/terms
-
-// Helper function to display JavaScript value on HTML page.
-function showResponse(response) {
-
-// $('#response').empty(); //clears the div before a new search result is inserted
-
-    var responseString = JSON.stringify(response, '', 2);
-    document.getElementById('response').innerHTML += responseString;
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+/* ================ CSS Variables for Theme ================ */
+:root {
+    --bg-primary: #0a0a0a;
+    --bg-secondary: #141414;
+    --bg-card: #1a1a1a;
+    --bg-card-hover: #242424;
+    --text-primary: #ffffff;
+    --text-secondary: #a0a0a0;
+    --accent-red: #FF2B2B;
+    --accent-red-hover: #ff4444;
+    --border-color: #2a2a2a;
+    --border-hover: #FF2B2B;
+    --input-bg: #1f1f1f;
+    --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.5);
+    --shadow-lg: 0 10px 25px -5px rgba(0, 0, 0, 0.7);
 }
 
-
-// Called automatically when JavaScript client library is loaded.
-function onClientLoad() {
-    gapi.client.load('youtube', 'v3', onYouTubeApiLoad);
+/* ================ Global Styles ================ */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
 
-// Called automatically when YouTube API interface is loaded (see line 9).
-function onYouTubeApiLoad() {
-    // This API key is intended for use only in this lesson.
-    // See http://goo.gl/PdPA1 to get a key for your own applications.
-    //gapi.client.setApiKey('AIzaSyCXPLS2sjm8jzy2ZHTlJ9oLahkqr0ZY3r4');
-    gapi.client.setApiKey('AIzaSyBEP1Pi6H-66ApYHVT9Wftd4Xb3YRqDE9w');
-
-   //generateNewSearch('travel');
+html, body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    height: 100%;
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
 }
 
-function generateNewSearch(input) {
-    // Use the JavaScript client library to create a search.list() API call.
-    var request = gapi.client.youtube.search.list({
-
-        part: 'snippet',
-        q: input + ' TED',
-        type: 'video',
-        maxResults: '50',
-        
-    });
-    
-    // Send the request to the API server,
-    // and invoke onSearchRepsonse() with the response.
-    request.execute(onSearchResponse);
-
+/* ================ Typography ================ */
+h2 {
+    color: var(--text-primary);
+    font-weight: 600;
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
 }
 
-// Called automatically with the response of the YouTube API request.
-function onSearchResponse(response) {
-    //showResponse(response); 												//for testing
-
-    iterateOverResponse(response);
+h3 {
+    font-weight: 500;
+    font-size: 1.1rem;
 }
 
+p {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+}
 
+/* ================ Layout ================ */
+#container {
+    width: 100%;
+    max-width: 1400px;
+    margin: 0 auto;
+    min-height: 100vh;
+    padding: 0 20px;
+    display: flex;
+    flex-direction: column;
+}
+
+/* ================ Header/Navigation ================ */
+#mainbar {
+    padding: 1.5rem 0;
+    margin-bottom: 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+    border-bottom: 1px solid var(--border-color);
+}
+
+a.home {
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    transition: opacity 0.3s ease;
+}
+
+a.home:hover {
+    opacity: 0.8;
+}
+
+.ted-logo {
+    width: 120px;
+    height: auto;
+    filter: brightness(0.95);
+}
+
+.name {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    letter-spacing: -0.02em;
+}
+
+/* ================ Search Container ================ */
+.search-container {
+    display: flex;
+    gap: 0.75rem;
+    align-items: center;
+    flex: 1;
+    max-width: 500px;
+}
+
+#searchinput {
+    flex: 1;
+    padding: 0.75rem 1rem;
+    font-size: 1rem;
+    background: var(--input-bg);
+    color: var(--text-primary);
+    border: 2px solid var(--border-color);
+    border-radius: 12px;
+    outline: none;
+    transition: all 0.3s ease;
+    font-family: inherit;
+}
+
+#searchinput:focus {
+    border-color: var(--accent-red);
+    background: #262626;
+    box-shadow: 0 0 0 3px rgba(255, 43, 43, 0.1);
+}
+
+#searchinput::placeholder {
+    color: var(--text-secondary);
+}
+
+.searchbutton {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.5rem;
+    background: var(--accent-red);
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    white-space: nowrap;
+    font-family: inherit;
+    letter-spacing: 0.02em;
+    box-shadow: var(--shadow);
+}
+
+.searchbutton:hover {
+    background: var(--accent-red-hover);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-lg);
+}
+
+.searchbutton:active {
+    transform: translateY(0);
+}
+
+.searchbutton svg {
+    width: 18px;
+    height: 18px;
+}
+
+/* ================ Results Section ================ */
+#results {
+    margin-bottom: 2rem;
+    min-height: 40px;
+    display: flex;
+    align-items: center;
+}
+
+.results-message {
+    color: var(--text-secondary);
+    font-size: 1.1rem;
+    font-weight: 500;
+}
+
+/* Loading animation */
+@keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+}
+
+.results-message:has-text("Searching") {
+    animation: pulse 1.5s ease-in-out infinite;
+}
+
+/* ================ Video Display ================ */
+#show-video {
+    display: none;
+    margin-bottom: 3rem;
+    animation: slideDown 0.5s ease;
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+#show-video h2 {
+    margin-bottom: 1.5rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.video-container {
+    position: relative;
+    padding-bottom: 56.25%;
+    height: 0;
+    overflow: hidden;
+    border-radius: 16px;
+    background: var(--bg-secondary);
+    box-shadow: var(--shadow-lg);
+}
+
+.video-container iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border: none;
+    border-radius: 16px;
+}
+
+/* ================ Video Grid ================ */
+#videos-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 5rem;
+    padding-bottom: 2rem;
+}
+
+.individual-video {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: 16px;
+    overflow: hidden;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    animation: fadeInUp 0.5s ease;
+    box-shadow: var(--shadow);
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.individual-video:hover {
+    background: var(--bg-card-hover);
+    border-color: var(--border-hover);
+    transform: translateY(-4px);
+    box-shadow:
+        0 20px 40px -10px rgba(0, 0, 0, 0.5),
+        0 0 0 1px var(--border-hover);
+}
+
+.individual-video img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.individual-video h2 {
+    font-size: 1rem;
+    font-weight: 600;
+    line-height: 1.4;
+    padding: 1rem;
+    color: var(--text-primary);
+    min-height: 80px;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    margin-bottom: 0;
+}
+
+.individual-video p {
+    padding: 0 1rem 1rem 1rem;
+    color: var(--text-secondary);
+    font-size: 0.85rem;
+    margin-top: auto;
+}
+
+/* ================ Footer ================ */
+#footer {
+    margin-top: auto;
+    border-top: 1px solid var(--border-color);
+    padding: 1.5rem 0;
+    background: var(--bg-secondary);
+}
+
+#footerspace {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+}
+
+.footer {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    font-weight: 500;
+}
+
+.youtube-logo {
+    width: 70px;
+    height: auto;
+    opacity: 0.7;
+    transition: opacity 0.3s ease;
+}
+
+.youtube-logo:hover {
+    opacity: 1;
+}
+
+/* ================ Responsive Design ================ */
+@media (max-width: 768px) {
+    #mainbar {
+        flex-direction: column;
+        align-items: stretch;
+        text-align: center;
+    }
+
+    .search-container {
+        max-width: 100%;
+        flex-direction: column;
+    }
+
+    #searchinput {
+        width: 100%;
+    }
+
+    .searchbutton {
+        width: 100%;
+        justify-content: center;
+    }
+
+    #videos-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .name {
+        font-size: 1.25rem;
+    }
+
+    a.home {
+        justify-content: center;
+    }
+}
+
+@media (max-width: 480px) {
+    #container {
+        padding: 0 15px;
+    }
+
+    .ted-logo {
+        width: 100px;
+    }
+
+    .individual-video h2 {
+        font-size: 0.9rem;
+    }
+}
+
+/* ================ Scrollbar Styling ================ */
+::-webkit-scrollbar {
+    width: 10px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--bg-secondary);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--border-color);
+    border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #404040;
+}
+
+/* ================ Smooth Scrolling ================ */
+html {
+    scroll-behavior: smooth;
+}
