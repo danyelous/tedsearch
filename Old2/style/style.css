@@ -1,0 +1,179 @@
+@import url(https://fonts.googleapis.com/css?family=Chivo);
+
+
+html, body{
+	font-family: 'Chivo', sans-serif;
+	margin: 0px;
+	padding: 0px;
+	height:100%;
+	background: #161616;
+}
+
+h2 {
+    color: #e3e3e3;
+}
+p {
+    color: #FF2C0C;
+	padding: 0px;
+	margin: 0px;
+}
+a.home{
+	text-decoration: none;
+}
+.name {
+    font-size: 1.8em;
+    color: #e3e3e3;
+    margin: 10px;
+	display: inline-block;
+}
+.results-message{
+	color: #e3e3e3;
+}
+#searchinput {
+    padding: 5px 5px 5px 5px;
+    font-size: 1.4em;
+    margin: 7px;
+    vertical-align: top;
+    background: #333;
+    color: #e3e3e3;
+    border: #4f4f4f;
+    border-radius: 5px;
+}
+#mainbar {
+    width: 100%;
+    padding: 0px 0px 5px 0px;
+}
+#mainbar img {
+    vertical-align: middle;
+}
+
+#container {
+	width: 90%;
+	margin: 0px auto 0px auto;
+min-height: 100%;
+height: auto;
+}
+
+#footer {
+width: 100%;
+/*border-top: 2px solid #fff;*/
+height:38px;
+clear: both;
+position: relative;
+margin-top: -65px;
+}
+
+#footerspace{
+    padding: 5px 10px 0px 0px;
+}
+
+#show-video{
+	display: none;
+}
+.video-container {
+    position: relative;
+    padding-bottom: 56.25%;
+    padding-top: 10px;
+	height: 0;
+	overflow: hidden;
+}
+ 
+.video-container iframe,
+.video-container object,
+.video-container embed {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 80%;
+}
+
+.individual-video img {
+	width: 100%;
+	margin: 0px auto 20px auto;
+	text-align: center;
+}
+.individual-video h2 {
+    font-size: 1em;
+}
+
+.individual-video {
+    background: #1d1d1d;
+    width: 30%; 
+    float: left; 
+    margin: 5px;
+    padding: 5px;
+    height: 350px; 
+	border:2px solid #333;
+	overflow:auto;
+-webkit-transition: all 0.5s ease;
+-moz-transition: all 0.5s ease;
+-ms-transition: all 0.5s ease;
+-o-transition: all 0.5s ease;
+transition: all 0.5s ease;
+}
+.individual-video:hover {
+	cursor: pointer;
+	border:2px solid #FF2C0C;
+-webkit-transition: all 0.5s ease;
+-moz-transition: all 0.5s ease;
+-ms-transition: all 0.5s ease;
+-o-transition: all 0.5s ease;
+transition: all 0.5s ease;
+border-radius: 5px;
+}
+
+.searchbutton {
+	cursor: pointer;
+    background: #FF2A0E;
+    border: 2px solid #4f4f4f;
+    border-radius: 5px 5px 5px 5px;
+    color: #fff;
+    font-size: 1.2em;
+    margin: 8px 5px 5px 5px;
+    padding: 5px;
+    text-align: center;
+    text-decoration: none;
+    width: 110px;
+    display: inline-block;
+	vertical-align: top;
+-webkit-transition: all 0.5s ease;
+-moz-transition: all 0.5s ease;
+-ms-transition: all 0.5s ease;
+-o-transition: all 0.5s ease;
+transition: all 0.5s ease;
+}
+.searchbutton:hover{
+	border:2px solid #FF2C0C;
+-webkit-transition: all 0.5s ease;
+-moz-transition: all 0.5s ease;
+-ms-transition: all 0.5s ease;
+-o-transition: all 0.5s ease;
+transition: all 0.5s ease;
+}
+
+.footer {
+    font-size: 1em;
+    float: right;
+    padding: 6px 0px 0px 0px;
+	color: #4d4d4d;
+}
+.youtube-logo {
+    vertical-align: middle;
+    float: right;
+}
+
+#videos-grid .individual-video h2{
+
+	min-height: 60px;
+	
+}
+
+.youtube-logo {
+    width: 80px;
+    margin: 5px 5px 0px 5px;
+}
+
+.ted-logo {
+    width: 150px;
+}
